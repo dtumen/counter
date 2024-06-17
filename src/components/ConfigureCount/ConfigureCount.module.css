@@ -1,0 +1,57 @@
+.config {
+  width: 300px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid lightblue;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.inputsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  border: 1px solid aqua;
+  border-radius: 10px;
+  color: aqua;
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input {
+  width: 150px;
+  text-align: center;
+  border: 1px solid aqua;
+}
+
+input:focus {
+  outline: 2px solid aqua;
+}
+
+.btnContainer {
+  border: 1px solid aqua;
+  height: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.errorInput {
+  width: 150px;
+  text-align: center;
+  border: 1px solid red;
+  color: red;
+}
+
+.errorInput:focus {
+  outline: 2px solid red;
+}
