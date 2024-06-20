@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Counter.module.css';
-import Button from '../Button/Button';
-import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from '../../App';
+import {Button} from '../Button/Button';
+import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from '../../types/types';
 
 type CounterPropsType = {
     currentValue: CurrentValueType
