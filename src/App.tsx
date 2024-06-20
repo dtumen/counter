@@ -2,20 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import Counter from './components/Counter/Counter';
 import ConfigureCount from './components/ConfigureCount/ConfigureCount';
-
-
-export type ValuesConfigType = {
-  maxValue: number
-  startValue: number
-};
-
-export const INCORRECT_MESSAGE = 'Incorrect type';
-export const PRESS_MESSAGE = 'Enter value and press "set"';
-
-type IncorrectType = typeof INCORRECT_MESSAGE;
-type PressSetType = typeof PRESS_MESSAGE;
-
-export type CurrentValueType = number | IncorrectType | PressSetType;
+import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './types/types';
 
 const STORAGE_KEY = {
     defaultConfig: 'defaultConfig',
