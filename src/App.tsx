@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import Counter from './components/Counter/Counter';
-import ConfigureCount from './components/ConfigureCount/ConfigureCount';
+import {ConfigureCount} from './components/ConfigureCount/ConfigureCount';
 import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './common/types/types';
 import {readFromLocalStorage, writeToLocalStorage} from './common/utils/localStorage';
 

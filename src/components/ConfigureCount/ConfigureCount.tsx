@@ -10,7 +10,7 @@ type ConfigureCountPropsType = {
     onSet: () => void;
 };
 
-const ConfigureCount = (props: ConfigureCountPropsType) => {
+export const ConfigureCount = (props: ConfigureCountPropsType) => {
     const {
         defaultConfig: {startValue, maxValue},
         isChange,
@@ -58,5 +58,3 @@ const ConfigureCount = (props: ConfigureCountPropsType) => {
         </div>
     );
 };
-
-export default ConfigureCount;
