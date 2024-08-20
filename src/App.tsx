@@ -2,44 +2,38 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import Counter from './components/Counter/Counter';
 import ConfigureCount from './components/ConfigureCount/ConfigureCount';
-import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './types/types';
+import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './common/types/types';
+import {readFromLocalStorage, writeToLocalStorage} from './common/utils/localStorage';
 
 const STORAGE_KEY = {
     defaultConfig: 'defaultConfig',
     currentValue: 'currentValue',
     isChange: 'isChange',
 }
-const readFromLocalStorage = (key: string) => {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : null;
-};
 
-const writeToLocalStorage = (key: string, value: any) => {
-    localStorage.setItem(key, JSON.stringify(value));
-}
 
 function App() {
-  const [defaultConfig, setDefaultConfig] = useState<ValuesConfigType>({
-    maxValue: 5,
-    startValue: 0,
-  });
+    const [defaultConfig, setDefaultConfig] = useState<ValuesConfigType>({
+        maxValue: 5,
+        startValue: 0,
+    });
 
-  const [currentValue, setCurrentValue] = useState<CurrentValueType>(defaultConfig.startValue);
-  const [isChange, setIsChange] = useState(false);
+    const [currentValue, setCurrentValue] = useState<CurrentValueType>(defaultConfig.startValue);
+    const [isChange, setIsChange] = useState(false);
 
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-      setIsChange(true);
-      const { name, value } = event.currentTarget;
+        setIsChange(true);
+        const {name, value} = event.currentTarget;
 
-      setDefaultConfig((prevConfig) => ({
-          ...prevConfig,
-          [name]: Number(value),
-      }));
-  };
+        setDefaultConfig((prevConfig) => ({
+            ...prevConfig,
+            [name]: Number(value),
+        }));
+    };
 
 
     useEffect(() => {
-        const { startValue, maxValue } = defaultConfig;
+        const {startValue, maxValue} = defaultConfig;
 
         if (startValue < 0 || startValue >= maxValue) {
             setCurrentValue(INCORRECT_MESSAGE);
@@ -74,42 +68,42 @@ function App() {
         writeToLocalStorage(STORAGE_KEY.isChange, isChange);
     }, [defaultConfig, currentValue, isChange]);
 
-  const setButtonHandler = () => {
-      setIsChange(false);
-  };
+    const setButtonHandler = () => {
+        setIsChange(false);
+    };
 
-  const increaseHandler = () => {
-      setCurrentValue((prevValue) => {
-          if (typeof prevValue === 'number') {
-              return prevValue + 1;
-          }
+    const increaseHandler = () => {
+        setCurrentValue((prevValue) => {
+            if (typeof prevValue === 'number') {
+                return prevValue + 1;
+            }
 
-          return prevValue;
-      })
-  };
-  const resetHandler = () => {
-      if (typeof currentValue === 'number') {
-          setCurrentValue(defaultConfig.startValue);
-      }
-  };
+            return prevValue;
+        })
+    };
+    const resetHandler = () => {
+        if (typeof currentValue === 'number') {
+            setCurrentValue(defaultConfig.startValue);
+        }
+    };
 
-  return (
-    <div className="App">
-      <ConfigureCount
-          defaultConfig={defaultConfig}
-          onChange={changeHandler}
-          isChange={isChange}
-          onSet={setButtonHandler}
-      />
-      <Counter
-          currentValue={currentValue}
-          defaultConfig={defaultConfig}
-          isChange={isChange}
-          onIncrease={increaseHandler}
-          onReset={resetHandler}
-      />
-    </div>
-  );
+    return (
+        <div className="App">
+            <ConfigureCount
+                defaultConfig={defaultConfig}
+                onChange={changeHandler}
+                isChange={isChange}
+                onSet={setButtonHandler}
+            />
+            <Counter
+                currentValue={currentValue}
+                defaultConfig={defaultConfig}
+                isChange={isChange}
+                onIncrease={increaseHandler}
+                onReset={resetHandler}
+            />
+        </div>
+    );
 }
 
 export default App;

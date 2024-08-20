@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Counter.module.css';
 import {Button} from '../Button/Button';
-import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from '../../types/types';
+import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from '../../common/types/types';
 
 type CounterPropsType = {
     currentValue: CurrentValueType
@@ -24,9 +24,9 @@ const Counter = (props: CounterPropsType) => {
 
     let styleValue =
         currentValue === INCORRECT_MESSAGE ? s.redMessage :
-        currentValue === PRESS_MESSAGE ? s.textMessage :
-        currentValue === maxValue ? s.countRed :
-        s.count;
+            currentValue === PRESS_MESSAGE ? s.textMessage :
+                currentValue === maxValue ? s.countRed :
+                    s.count;
 
 
     return (

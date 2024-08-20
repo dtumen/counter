@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import {Button} from '../Button/Button';
 import s from './ConfigureCount.module.css';
-import {ValuesConfigType} from '../../types/types';
+import {ValuesConfigType} from '../../common/types/types';
 
 type ConfigureCountPropsType = {
     defaultConfig: ValuesConfigType;

@@ -1,7 +1,7 @@
-import type { Meta } from '@storybook/react';
+import type {Meta} from '@storybook/react';
 
-import { Button } from './Button';
-import { useState } from 'react';
+import {Button} from './Button';
+import {useState} from 'react';
 
 const meta: Meta<typeof Button> = {
     title: 'Stories/Button',
@@ -10,9 +10,9 @@ const meta: Meta<typeof Button> = {
         layout: 'centered',
         backgrounds: {
             values: [
-                { name: 'light', value: '#fff' },
-                { name: 'dark', value: '#333' },
-                { name: 'purple', value: '#7d24a4' },
+                {name: 'light', value: '#fff'},
+                {name: 'dark', value: '#333'},
+                {name: 'purple', value: '#7d24a4'},
             ],
         }
     },
@@ -21,21 +21,24 @@ const meta: Meta<typeof Button> = {
 
 export default meta;
 
-export const Normal = () =>  {
+export const Normal = () => {
     const [isDisable, setDisable] = useState(false);
     return (
         <Button
             name={'button'}
-            onClick={() => {}}
-            disabled={isDisable} />
+            onClick={() => {
+            }}
+            disabled={isDisable}/>
     )
 }
 
 export const Disabled = () => {
+    const [isDisable, setDisable] = useState(true);
     return (
         <Button
             name={'button'}
-            onClick={() => {}}
-            disabled />
+            onClick={() => {
+            }}
+            disabled={isDisable}/>
     )
 }
