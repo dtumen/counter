@@ -1,4 +1,4 @@
-import type {Meta, StoryObj} from '@storybook/react';
+import type {Meta} from '@storybook/react';
 
 import Counter from './Counter';
 import {CurrentValueType, ValuesConfigType} from '../../common/types/types';
