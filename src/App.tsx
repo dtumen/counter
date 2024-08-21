@@ -1,9 +1,12 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState, useReducer} from 'react';
 import './App.css';
 import Counter from './components/Counter/Counter';
 import {ConfigureCount} from './components/ConfigureCount/ConfigureCount';
 import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './common/types/types';
 import {readFromLocalStorage, writeToLocalStorage} from './common/utils/localStorage';
+import {updateConfigValueAC, updateConfigValuesLocalStorageAC} from './state/config-reducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from './state/store';
 
 const STORAGE_KEY = {
     defaultConfig: 'defaultConfig',
@@ -13,10 +16,9 @@ const STORAGE_KEY = {
 
 
 function App() {
-    const [defaultConfig, setDefaultConfig] = useState<ValuesConfigType>({
-        maxValue: 5,
-        startValue: 0,
-    });
+    const dispatch = useDispatch();
+    const defaultConfig = useSelector<AppRootStateType, ValuesConfigType>((state) => state.config)
+
 
     const [currentValue, setCurrentValue] = useState<CurrentValueType>(defaultConfig.startValue);
     const [isChange, setIsChange] = useState(false);
@@ -25,10 +27,8 @@ function App() {
         setIsChange(true);
         const {name, value} = event.currentTarget;
 
-        setDefaultConfig((prevConfig) => ({
-            ...prevConfig,
-            [name]: Number(value),
-        }));
+        const action = updateConfigValueAC(name, value);
+        dispatch(action);
     };
 
 
@@ -51,7 +51,8 @@ function App() {
         const isChangeFromLocal = readFromLocalStorage(STORAGE_KEY.isChange);
 
         if (defaultConfigFromLocal) {
-            setDefaultConfig(defaultConfigFromLocal);
+            const action = updateConfigValuesLocalStorageAC(defaultConfigFromLocal)
+            dispatch(action);
         }
 
         if (currentValueFromLocal !== null) {
