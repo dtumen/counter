@@ -15,23 +15,19 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
 
-
 function App() {
     const dispatch = useDispatch();
-    const defaultConfig = useSelector<AppRootStateType, ValuesConfigType>((state) => state.config.defaultConfig);
 
+    const defaultConfig = useSelector<AppRootStateType, ValuesConfigType>((state) => state.config.defaultConfig);
     const currentValue = useSelector<AppRootStateType, CurrentValueType>((state) => state.config.currentValue);
     const isChange = useSelector<AppRootStateType, boolean>((state) => state.config.isChange);
 
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        // setIsChange(true);
         dispatch(changeStatusAC(true))
         const {name, value} = event.currentTarget;
-
         const action = updateConfigValueAC(name, value);
         dispatch(action);
     };
-
 
     useEffect(() => {
         const {startValue, maxValue} = defaultConfig;
@@ -43,9 +39,7 @@ function App() {
         } else {
             dispatch(setValueAC())
         }
-
     }, [defaultConfig, isChange]);
-
 
     const setButtonHandler = () => {
         dispatch(changeStatusAC(false))
@@ -54,6 +48,7 @@ function App() {
     const increaseHandler = () => {
         dispatch(incValueAC())
     };
+
     const resetHandler = () => {
         dispatch(resetValueAC())
     };

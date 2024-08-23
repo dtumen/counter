@@ -11,54 +11,25 @@ export const initialState: InitialStateType = {
     isChange: false,
 }
 
-
 export const configReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
-        case 'UPDATE-CONFIG-VALUES': {
-            return {
-                ...state,
-                defaultConfig: {
-                    ...state.defaultConfig,
-                    ...action.payload,
-                }
-            }
-        }
-        case 'SET-COUNTER': {
+        case 'UPDATE-CONFIG-VALUES':
+            return {...state, defaultConfig: {...state.defaultConfig, ...action.payload}}
+        case 'PRESS-SET':
+            return {...state, currentValue: action.payload}
+        case 'SET-CHANGE-STATUS':
+            return {...state, isChange: action.payload}
+        case 'RESET-COUNTER':
+            return {...state, currentValue: state.defaultConfig.startValue}
+        case 'INCORRECT-VALUE':
+            return {...state, currentValue: action.payload}
+        case 'INCREMENT-COUNTER':
+            let newCurrentValue = typeof state.currentValue === 'number' ? state.currentValue + 1 : state.currentValue;
+            return {...state, currentValue: newCurrentValue}
+        case 'SET-COUNTER':
             let {currentValue, defaultConfig: {startValue}} = state;
             let current = ((typeof currentValue === 'number') && currentValue !== startValue) ? currentValue : startValue;
-            return {
-                ...state,
-                currentValue: current,
-            }
-        }
-        case 'INCREMENT-COUNTER': {
-            let newCurrentValue = typeof state.currentValue === 'number' ? state.currentValue + 1 : state.currentValue;
-            return {
-                ...state,
-                currentValue: newCurrentValue,
-            }
-        }
-        case 'RESET-COUNTER':
-            return {
-                ...state,
-                currentValue: state.defaultConfig.startValue,
-            }
-        case 'INCORRECT-VALUE': {
-            return {
-                ...state,
-                currentValue: action.payload,
-            }
-        }
-        case 'PRESS-SET':
-            return {
-                ...state,
-                currentValue: action.payload,
-            }
-        case 'SET-CHANGE-STATUS':
-            return {
-                ...state,
-                isChange: action.payload,
-            }
+            return {...state, currentValue: current}
 
         default:
             return state;
@@ -66,6 +37,7 @@ export const configReducer = (state: InitialStateType = initialState, action: Ac
 }
 
 /* --------------------------------ACTION_CREATORS: ------------------------------*/
+
 // 1. defaultConfig:
 export const updateConfigValueAC = (name: string, value: string) => {
     return {
@@ -83,22 +55,8 @@ export const changeStatusAC = (value: boolean) => ({type: 'SET-CHANGE-STATUS', p
 export const incValueAC = () => ({type: 'INCREMENT-COUNTER'}) as const
 export const resetValueAC = () => ({type: 'RESET-COUNTER'}) as const
 export const setValueAC = () => ({type: 'SET-COUNTER'}) as const
-
-
-export const incorrectValueAC = () => {
-    return {
-        type: 'INCORRECT-VALUE',
-        payload: INCORRECT_MESSAGE
-    } as const
-}
-
-export const pressMessageAC = () => {
-    return {
-        type: 'PRESS-SET',
-        payload: PRESS_MESSAGE
-    } as const
-}
-
+export const incorrectValueAC = () => ({type: 'INCORRECT-VALUE', payload: INCORRECT_MESSAGE} as const)
+export const pressMessageAC = () => ({type: 'PRESS-SET', payload: PRESS_MESSAGE} as const)
 
 /* --------------------------------ANOTHER TYPES: --------------------------------*/
 export type InitialStateType = {
@@ -106,7 +64,6 @@ export type InitialStateType = {
     currentValue: CurrentValueType,
     isChange: boolean,
 }
-
 
 /* --------------------------------ACTIONS TYPE: ---------------------------------*/
 

@@ -18,7 +18,6 @@ export const ConfigureCount = (props: ConfigureCountPropsType) => {
 
     let errorMaxInputStyle = maxValue <= startValue ? s.errorInput : '';
     let errorMinInputStyle = startValue >= maxValue || startValue < 0 ? s.errorInput : '';
-
     let isSetButtonDisable = startValue >= maxValue || startValue < 0 || !isChange;
 
     return (
