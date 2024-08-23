@@ -1,56 +1,49 @@
-import {configReducer, updateConfigValueAC, updateConfigValuesLocalStorageAC} from './config-reducer';
-import { ValuesConfigType } from '../common/types/types';
+import {
+    ActionsType,
+    configReducer,
+    incValueAC,
+    InitialStateType,
+    resetValueAC,
+    updateConfigValueAC
+} from './config-reducer';
 
-it('configReducer should return update state with startValue', () => {
-    const startState: ValuesConfigType = {
-        maxValue: 5,
+describe('State Reducer', () => {
+    const defaultConfig = {
         startValue: 0,
+        maxValue: 5,
     };
 
-    const action = updateConfigValueAC('startValue', '3');
+    const createStartState = (currentValue: number = defaultConfig.startValue): InitialStateType => ({
+        defaultConfig: {
+            startValue: defaultConfig.startValue,
+            maxValue: defaultConfig.maxValue,
+        },
+        currentValue,
+        isChange: false,
+    });
 
-    const endState = configReducer(startState, action);
+    it('should correctly update defaultConfig value', () => {
+        const startState = createStartState();
+        const newStartValue = 3;
+        const action: ActionsType = updateConfigValueAC('startValue', newStartValue.toString());
+        const endState = configReducer(startState, action);
 
-    console.log('startValue: ', endState);
+        expect(endState.defaultConfig.startValue).toBe(newStartValue);
+    });
 
-    expect(endState).not.toBe(startState);
-    expect(endState.startValue).toEqual(3);
-})
+    it('should correctly increment counter value', () => {
+        const startState = createStartState();
+        const action: ActionsType = incValueAC();
+        const endState = configReducer(startState, action);
 
-it('configReducer should return correct state with maxValue', () => {
-    const startState: ValuesConfigType = {
-        maxValue: 5,
-        startValue: 0,
-    };
+        expect(endState.currentValue).toBe(1);
+    });
 
-    const action = updateConfigValueAC('maxValue', '10');
+    it('should correctly reset counter value', () => {
+        const startState = createStartState();
+        const action: ActionsType = resetValueAC();
+        const endState = configReducer(startState, action);
 
-    const endState = configReducer(startState, action);
-
-    console.log('maxValue: ', endState);
-
-    expect(endState).not.toBe(startState);
-    expect(endState.maxValue).toEqual(10);
-})
-
-it('configReducer should return correct state for values from localStorage', () => {
-    const startState: ValuesConfigType = {
-        maxValue: 5,
-        startValue: 0,
-    };
-
-    const localSt = {
-        maxValue: 15,
-        startValue: 10,
-    }
-
-    const action = updateConfigValuesLocalStorageAC(localSt);
-
-    const endState = configReducer(startState, action);
-
-    console.log('local: ', endState);
-
-    expect(endState).not.toBe(startState);
-    expect(endState.maxValue).toEqual(15);
-    expect(endState.startValue).toEqual(10);
-})
+        expect(endState.currentValue).toBe(startState.defaultConfig.startValue);
+    });
+});

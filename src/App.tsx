@@ -1,30 +1,31 @@
-import React, {ChangeEvent, useEffect, useState, useReducer} from 'react';
+import React, {ChangeEvent, useEffect} from 'react';
 import './App.css';
 import Counter from './components/Counter/Counter';
 import {ConfigureCount} from './components/ConfigureCount/ConfigureCount';
-import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from './common/types/types';
-import {readFromLocalStorage, writeToLocalStorage} from './common/utils/localStorage';
-import {updateConfigValueAC, updateConfigValuesLocalStorageAC} from './state/config-reducer';
+import {CurrentValueType, ValuesConfigType} from './common/types/types';
+
+import {
+    incorrectValueAC,
+    pressMessageAC,
+    resetValueAC,
+    setValueAC,
+    incValueAC,
+    updateConfigValueAC, changeStatusAC,
+} from './state/config-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-
-const STORAGE_KEY = {
-    defaultConfig: 'defaultConfig',
-    currentValue: 'currentValue',
-    isChange: 'isChange',
-}
 
 
 function App() {
     const dispatch = useDispatch();
-    const defaultConfig = useSelector<AppRootStateType, ValuesConfigType>((state) => state.config)
+    const defaultConfig = useSelector<AppRootStateType, ValuesConfigType>((state) => state.config.defaultConfig);
 
-
-    const [currentValue, setCurrentValue] = useState<CurrentValueType>(defaultConfig.startValue);
-    const [isChange, setIsChange] = useState(false);
+    const currentValue = useSelector<AppRootStateType, CurrentValueType>((state) => state.config.currentValue);
+    const isChange = useSelector<AppRootStateType, boolean>((state) => state.config.isChange);
 
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setIsChange(true);
+        // setIsChange(true);
+        dispatch(changeStatusAC(true))
         const {name, value} = event.currentTarget;
 
         const action = updateConfigValueAC(name, value);
@@ -36,56 +37,25 @@ function App() {
         const {startValue, maxValue} = defaultConfig;
 
         if (startValue < 0 || startValue >= maxValue) {
-            setCurrentValue(INCORRECT_MESSAGE);
+            dispatch(incorrectValueAC())
         } else if (isChange) {
-            setCurrentValue(PRESS_MESSAGE);
+            dispatch(pressMessageAC())
         } else {
-            setCurrentValue(startValue);
+            dispatch(setValueAC())
         }
 
     }, [defaultConfig, isChange]);
 
-    useEffect(() => {
-        const defaultConfigFromLocal = readFromLocalStorage(STORAGE_KEY.defaultConfig);
-        const currentValueFromLocal = readFromLocalStorage(STORAGE_KEY.currentValue);
-        const isChangeFromLocal = readFromLocalStorage(STORAGE_KEY.isChange);
-
-        if (defaultConfigFromLocal) {
-            const action = updateConfigValuesLocalStorageAC(defaultConfigFromLocal)
-            dispatch(action);
-        }
-
-        if (currentValueFromLocal !== null) {
-            setCurrentValue(currentValueFromLocal);
-        }
-
-        setIsChange(isChangeFromLocal)
-
-    }, []);
-
-    useEffect(() => {
-        writeToLocalStorage(STORAGE_KEY.currentValue, currentValue);
-        writeToLocalStorage(STORAGE_KEY.defaultConfig, defaultConfig);
-        writeToLocalStorage(STORAGE_KEY.isChange, isChange);
-    }, [defaultConfig, currentValue, isChange]);
 
     const setButtonHandler = () => {
-        setIsChange(false);
+        dispatch(changeStatusAC(false))
     };
 
     const increaseHandler = () => {
-        setCurrentValue((prevValue) => {
-            if (typeof prevValue === 'number') {
-                return prevValue + 1;
-            }
-
-            return prevValue;
-        })
+        dispatch(incValueAC())
     };
     const resetHandler = () => {
-        if (typeof currentValue === 'number') {
-            setCurrentValue(defaultConfig.startValue);
-        }
+        dispatch(resetValueAC())
     };
 
     return (

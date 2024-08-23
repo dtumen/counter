@@ -1,59 +1,136 @@
-import {ValuesConfigType} from '../common/types/types';
+import {CurrentValueType, INCORRECT_MESSAGE, PRESS_MESSAGE, ValuesConfigType} from '../common/types/types';
 
-type UpdateConfigActionType = {
-    type: 'UPDATE-CONFIG-VALUES',
-    payload: {
-        [key: string]: number;
-    }
+let startValueForState = 0;
+
+export const initialState: InitialStateType = {
+    defaultConfig: {
+        maxValue: 5,
+        startValue: startValueForState,
+    },
+    currentValue: startValueForState,
+    isChange: false,
 }
 
-type UpdateConfigFromLocalActionType = {
-    type: 'UPDATE-CONFIG-VALUES-FROM-LOCAL',
-    payload: {
-        [key: string]: number;
-    }
-}
 
-type ActionsType =
-    | UpdateConfigActionType | UpdateConfigFromLocalActionType
-
-const initialState: ValuesConfigType = {
-    maxValue: 5,
-    startValue: 0,
-}
-
-export const configReducer = (state: ValuesConfigType = initialState, action: ActionsType): ValuesConfigType => {
+export const configReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case 'UPDATE-CONFIG-VALUES': {
             return {
                 ...state,
-                ...action.payload,
+                defaultConfig: {
+                    ...state.defaultConfig,
+                    ...action.payload,
+                }
             }
         }
-        case 'UPDATE-CONFIG-VALUES-FROM-LOCAL': {
+        case 'SET-COUNTER': {
+            let {currentValue, defaultConfig: {startValue}} = state;
+            let current = ((typeof currentValue === 'number') && currentValue !== startValue) ? currentValue : startValue;
             return {
                 ...state,
-                ...action.payload,
+                currentValue: current,
             }
         }
+        case 'INCREMENT-COUNTER': {
+            let newCurrentValue = typeof state.currentValue === 'number' ? state.currentValue + 1 : state.currentValue;
+            return {
+                ...state,
+                currentValue: newCurrentValue,
+            }
+        }
+        case 'RESET-COUNTER':
+            return {
+                ...state,
+                currentValue: state.defaultConfig.startValue,
+            }
+        case 'INCORRECT-VALUE': {
+            return {
+                ...state,
+                currentValue: action.payload,
+            }
+        }
+        case 'PRESS-SET':
+            return {
+                ...state,
+                currentValue: action.payload,
+            }
+        case 'SET-CHANGE-STATUS':
+            return {
+                ...state,
+                isChange: action.payload,
+            }
 
         default:
-            return { ...state };
+            return state;
     }
 }
 
-export const updateConfigValueAC = (name: string, value: string): UpdateConfigActionType => {
+/* --------------------------------ACTION_CREATORS: ------------------------------*/
+// 1. defaultConfig:
+export const updateConfigValueAC = (name: string, value: string) => {
     return {
         type: 'UPDATE-CONFIG-VALUES',
         payload: {
             [name]: Number(value),
         }
-    }
+    } as const
 }
 
-export const updateConfigValuesLocalStorageAC = (objFromLocal: ValuesConfigType): UpdateConfigFromLocalActionType => {
+// 2. change:
+export const changeStatusAC = (value: boolean) => ({type: 'SET-CHANGE-STATUS', payload: value}) as const
+
+// 3. counter:
+export const incValueAC = () => ({type: 'INCREMENT-COUNTER'}) as const
+export const resetValueAC = () => ({type: 'RESET-COUNTER'}) as const
+export const setValueAC = () => ({type: 'SET-COUNTER'}) as const
+
+
+export const incorrectValueAC = () => {
     return {
-        type: 'UPDATE-CONFIG-VALUES-FROM-LOCAL',
-        payload: objFromLocal
-    }
+        type: 'INCORRECT-VALUE',
+        payload: INCORRECT_MESSAGE
+    } as const
 }
+
+export const pressMessageAC = () => {
+    return {
+        type: 'PRESS-SET',
+        payload: PRESS_MESSAGE
+    } as const
+}
+
+
+/* --------------------------------ANOTHER TYPES: --------------------------------*/
+export type InitialStateType = {
+    defaultConfig: ValuesConfigType,
+    currentValue: CurrentValueType,
+    isChange: boolean,
+}
+
+
+/* --------------------------------ACTIONS TYPE: ---------------------------------*/
+
+export type ActionsType =
+    | UpdateConfigActionType
+    | SetValueType
+    | IncValueType
+    | ResetValueType
+    | IncorrectValueType
+    | PressMessageType
+    | ChangeStatusType
+
+/* --------------------------------ACTION_CREATOR TYPES: -------------------------*/
+
+// 1. defaultConfig:
+type UpdateConfigActionType = ReturnType<typeof updateConfigValueAC>
+
+// 2. isChange:
+type ChangeStatusType = ReturnType<typeof changeStatusAC>
+
+// 3. counter:
+type SetValueType = ReturnType<typeof setValueAC>
+type IncValueType = ReturnType<typeof incValueAC>
+type ResetValueType = ReturnType<typeof resetValueAC>
+type IncorrectValueType = ReturnType<typeof incorrectValueAC>
+type PressMessageType = ReturnType<typeof pressMessageAC>
+
