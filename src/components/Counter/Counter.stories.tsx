@@ -22,7 +22,7 @@ const meta = {
 
 export default meta;
 
-export const Deafault = () => {
+export const Default = () => {
     const [currentValue, setCurrentValue] = useState<CurrentValueType>(0);
     const [defaultConfig, setDefaultConfig] = useState<ValuesConfigType>({
         maxValue: 5,
